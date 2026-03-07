@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
+import API from '../api';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUser = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/users/me');
+            const res = await axios.get(`${API}/api/users/me`);
             setUser(res.data);
         } catch (err) {
             localStorage.removeItem('token');
