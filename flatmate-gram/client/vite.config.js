@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    allowedHosts: ['flatmate-frontend-be5x.onrender.com']
-  }
+ server: {
+  allowedHosts: ['.onrender.com']
+}
 })
