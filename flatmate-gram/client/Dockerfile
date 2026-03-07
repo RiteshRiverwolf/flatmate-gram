@@ -8,6 +8,12 @@ RUN npm install --legacy-peer-deps
 
 COPY . .
 
-EXPOSE 5173
+# Build the frontend
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+# Install static server
+RUN npm install -g serve
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "dist", "-l", "3000"]
