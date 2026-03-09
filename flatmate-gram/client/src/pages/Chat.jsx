@@ -4,9 +4,13 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Send, ArrowLeft } from 'lucide-react';
-import API from '../api';
+import API from "../api";
+import { io } from "socket.io-client";
 
-const socket = io.connect(API);
+const socket = io(API, {
+  transports: ["websocket"],
+  withCredentials: true
+});
 
 const Chat = () => {
     const { id: matchId } = useParams(); 
