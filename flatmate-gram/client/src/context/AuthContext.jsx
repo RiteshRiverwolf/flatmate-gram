@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import API from '../api';
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -9,32 +10,49 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (token) {
-            axios.defaults.headers.common['x-auth-token'] = token;
-            fetchUser();
-        } else {
-            setLoading(false);
-        }
-    }, [token]);
+        const initAuth = async () => {
+            const storedToken = localStorage.getItem('token');
 
-    const fetchUser = async () => {
+            if (storedToken) {
+                axios.defaults.headers.common['x-auth-token'] = storedToken;
+                setToken(storedToken);
+
+                try {
+                    const res = await axios.get(`${API}/api/users/me`);
+                    setUser(res.data);
+                } catch (err) {
+                    console.error("Auth fetch failed", err);
+                    localStorage.removeItem('token');
+                    setToken(null);
+                    delete axios.defaults.headers.common['x-auth-token'];
+                }
+            }
+
+            setLoading(false);
+        };
+
+        initAuth();
+    }, []);
+
+    const login = async (newToken) => {
+        localStorage.setItem('token', newToken);
+
+        // IMPORTANT: attach token immediately
+        axios.defaults.headers.common['x-auth-token'] = newToken;
+
+        setToken(newToken);
+
         try {
             const res = await axios.get(`${API}/api/users/me`);
             setUser(res.data);
         } catch (err) {
-            localStorage.removeItem('token');
-            setToken(null);
+            console.error("Login fetch failed", err);
         }
-        setLoading(false);
-    };
-
-    const login = (newToken) => {
-        localStorage.setItem('token', newToken);
-        setToken(newToken);
     };
 
     const logout = () => {
         localStorage.removeItem('token');
+        delete axios.defaults.headers.common['x-auth-token'];
         setToken(null);
         setUser(null);
     };
