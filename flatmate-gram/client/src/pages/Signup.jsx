@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
 import API from '../api';
 
 const Signup = () => {
@@ -12,7 +11,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post(`${API}/api/auth/register`, formData);
+            const res = await API.post('/api/auth/register', formData);
             login(res.data.token);
             navigate('/profile-setup');
         } catch (err) {
@@ -21,14 +20,21 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <form onSubmit={handleSubmit} className="p-8 bg-white shadow-xl rounded-2xl w-96">
-                <h2 className="text-2xl font-bold mb-6 text-center">Join FlatmateGram</h2>
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 px-4">
+
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white/90 backdrop-blur-lg p-10 rounded-3xl shadow-2xl w-full max-w-md transition-all"
+            >
+
+                <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+                    Join FlatmateGram
+                </h2>
 
                 <input
                     type="text"
                     placeholder="Name"
-                    className="w-full p-3 mb-4 border rounded"
+                    className="w-full p-3 mb-4 border rounded-xl focus:ring-2 focus:ring-purple-400 outline-none transition"
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                     required
                 />
@@ -36,7 +42,7 @@ const Signup = () => {
                 <input
                     type="email"
                     placeholder="Email"
-                    className="w-full p-3 mb-4 border rounded"
+                    className="w-full p-3 mb-4 border rounded-xl focus:ring-2 focus:ring-purple-400 outline-none transition"
                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                     required
                 />
@@ -44,22 +50,27 @@ const Signup = () => {
                 <input
                     type="password"
                     placeholder="Password"
-                    className="w-full p-3 mb-6 border rounded"
+                    className="w-full p-3 mb-6 border rounded-xl focus:ring-2 focus:ring-purple-400 outline-none transition"
                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                     required
                 />
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700"
+                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-lg"
                 >
                     Sign Up
                 </button>
 
-                <p className="mt-4 text-center text-sm">
-                    Already have an account? <Link to="/login" className="text-blue-600">Login</Link>
+                <p className="mt-5 text-center text-sm text-gray-600">
+                    Already have an account?
+                    <Link to="/login" className="text-purple-600 font-semibold ml-1 hover:underline">
+                        Login
+                    </Link>
                 </p>
+
             </form>
+
         </div>
     );
 };
